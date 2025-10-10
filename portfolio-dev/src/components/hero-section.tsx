@@ -1,8 +1,11 @@
 "use client"
 
-import { useState } from "react"
+import { useRef, useState } from "react"
 import { motion } from "motion/react"
 import { cn } from "@/lib/utils"
+import { useGSAP } from '@gsap/react'
+import gsap from 'gsap';
+import { SplitText } from "gsap/all"
 
 interface CardData {
   id: string
@@ -61,6 +64,31 @@ const Card = ({ card, index, totalCards, isExpanded }: CardProps) => {
   const spreadY = 0
   const spreadRotate = index * 8 - (totalCards - 1) * 4 // Increased rotation for better fan effect
   const spreadScale = 1
+
+  useGSAP( () => {
+    const heroSplitByChar = new SplitText('.hero-title', { type: 'chars, words'});
+    
+    const heroSplitByLine = new SplitText('.hero-title', { type: 'lines'});
+
+    {/*heroSplit.chars.forEach((char) => char.classList.add(''))*/}
+
+    {/*gsap.from(heroSplitByChar.chars, {
+      yPercent: 100,
+      duration: 0.6,
+      ease: 'expo-out',
+      stagger: 0.06
+    })*/}
+
+    gsap.from(heroSplitByLine.lines, {
+      opacity:0,
+      yPercent: 100,
+      duration: 0.6,
+      ease: 'expo-out',
+      stagger: 0.06,
+      delay: 0.4
+    })
+    
+  }, []);
 
   return (
     <motion.div
@@ -151,15 +179,31 @@ export default function HeroSection() {
 
   const handleToggle = () => setIsExpanded(!isExpanded)
 
+  
+  const cardStackRef = useRef<HTMLButtonElement>(null);
+
+  useGSAP(() => {
+    // Set initial stat
+    // Animate in
+    gsap.from(cardStackRef, { 
+      opacity:0,
+      yPercent: 50,
+      duration: 0.6,
+      ease: 'expo-out',
+      delay: 0.4
+    })
+  }, [])
+
   return (
     <section className="relative min-h-screen w-full flex flex-col items-center justify-center overflow-hidden">
       {/* Hero Content */}
       <div className="relative z-10 text-center max-w-4xl mx-auto px-4 mb-12">
-        <h1 className="text-5xl md:text-7xl font-bold text-foreground mb-6 text-balance">Hy, my name is Hamza And i'm a Softwar Engineer</h1>
+        <h1 className="hero-title text-5xl md:text-7xl font-bold text-indigo-500 mb-6 text-balance">Hy, my name is Hamza And i'm a Softwar Engineer</h1>
       </div>
 
       {/* Card Stack - Much wider container for proper spacing */}
       <button
+        ref={cardStackRef}
         className={cn(
           "relative mx-auto cursor-pointer",
           "min-h-[480px] w-full max-w-[95vw]", // Increased height and width
