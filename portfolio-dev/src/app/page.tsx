@@ -94,7 +94,7 @@ export default function Home() {
 {/* Desktop Header */}
 <header
   ref={navbarRef}
-  className={`sticky top-4 z-[9999] mx-auto hidden w-full flex-row items-center justify-between self-start rounded-full bg-background/80 md:flex backdrop-blur-sm border border-border/50 shadow-lg transition-all duration-300 ${
+  className={`sticky top-4 z-[9999] mx-auto hidden w-full flex-row items-center justify-between self-start rounded-full bg-indigo-700/40 md:flex backdrop-blur-sm border border-border/50 shadow-lg transition-all duration-300 ${
     isScrolled ? "max-w-3xl px-2" : "max-w-5xl px-4"
   } py-2`}
   style={{
@@ -115,9 +115,9 @@ export default function Home() {
           )}
         </div>
 
-        <div className="absolute inset-0 hidden flex-1 flex-row items-center justify-center space-x-2 text-sm font-medium text-muted-foreground transition duration-200 hover:text-foreground md:flex md:space-x-2">
+        <div className="absolute inset-0 hidden flex-1 flex-row items-center justify-center space-x-2 text-sm font-medium text-zinc-100 transition duration-200 hover:text-foreground md:flex md:space-x-2">
           <a
-            className="relative px-4 py-2 text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
+            className="relative px-4 py-2 text-zinc-50 hover:text-foreground transition-colors cursor-pointer"
             onClick={(e) => {
               e.preventDefault()
               const element = document.getElementById("about")
@@ -136,7 +136,7 @@ export default function Home() {
             <span className="relative z-20">About</span>
           </a>
           <a
-            className="relative px-4 py-2 text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
+            className="relative px-4 py-2 text-zinc-50 hover:text-foreground transition-colors cursor-pointer"
             onClick={(e) => {
               e.preventDefault()
               const element = document.getElementById("projects")
@@ -155,7 +155,7 @@ export default function Home() {
             <span className="relative z-20">Projects</span>
           </a>
           <a
-            className="relative px-4 py-2 text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
+            className="relative px-4 py-2 text-zinc-50 hover:text-foreground transition-colors cursor-pointer"
             onClick={(e) => {
               e.preventDefault()
               const element = document.getElementById("skills")
@@ -174,7 +174,7 @@ export default function Home() {
             <span className="relative z-20">Skills</span>
           </a>
           <a
-            className="relative px-4 py-2 text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
+            className="relative px-4 py-2 text-zinc-50 hover:text-foreground transition-colors cursor-pointer"
             onClick={(e) => {
               e.preventDefault()
               const element = document.getElementById("contact")
