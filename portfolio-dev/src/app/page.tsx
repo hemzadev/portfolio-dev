@@ -4,14 +4,24 @@ import Lottie from "lottie-react";
 import HeroSection from '@/components/hero-section';
 import { motion } from 'motion/react';
 import { useGSAP } from '@gsap/react';
-
+import LogoLoop from '@/components/LogoLoop';
+import { SiReact, SiNextdotjs, SiTypescript, SiTailwindcss } from 'react-icons/si';
 import gsap from 'gsap'
+import TechLogoLoop from '@/components/TechLogoLoop';
 
 export default function Home() {
   const [isScrolled, setIsScrolled] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [animationData, setAnimationData] = useState(null)
   const [isNavbarReady, setIsNavbarReady] = useState(false) // Add this state
+
+
+  const techLogos = [
+    { node: <SiReact />, title: "React", href: "https://react.dev" },
+    { node: <SiNextdotjs />, title: "Next.js", href: "https://nextjs.org" },
+    { node: <SiTypescript />, title: "TypeScript", href: "https://www.typescriptlang.org" },
+    { node: <SiTailwindcss />, title: "Tailwind CSS", href: "https://tailwindcss.com" },
+  ];
 
   useEffect(() => {
     const root = window.document.documentElement
@@ -277,62 +287,11 @@ export default function Home() {
           </div>
         </div>
         )}
-        
-        {/*
-          <div 
-            className="absolute top-0 left-0 right-0 bottom-0"
-            style={{
-              background: 'radial-gradient(ellipse 120% 80% at 50% 0%, #1e1b4b, transparent 60%)'
-            }} 
-          />
-
-          <div 
-            className="absolute top-0 left-0 right-0 bottom-0"
-            style={{
-              background: 'radial-gradient(circle 600px at 20% 20%, rgba(139, 92, 246, 0.35), transparent)'
-            }} 
-          />
-
-          <div 
-            className="absolute top-0 left-0 right-0 bottom-0"
-            style={{
-              background: 'radial-gradient(circle 600px at 80% 80%, rgba(59, 130, 246, 0.35), transparent)'
-            }} 
-          />
-        */}
         <HeroSection />
+        <TechLogoLoop/>
 
         
           {/* Grid pattern */}
-          <div 
-            className="absolute top-0 left-0 right-0 bottom-0"
-            style={{
-              backgroundImage: `
-                linear-gradient(to right, rgba(0,0,0,0.3) 1px, transparent 1px),
-                linear-gradient(to bottom, rgba(0,0,0,0.3) 1px, transparent 1px)
-              `,
-              backgroundSize: '48px 48px'
-            }} 
-          />
-
-        
-        {/* Hero Content */}
-        <div className="relative z-10 flex items-center justify-center min-h-screen px-4">
-          <div className="text-center max-w-4xl mx-auto">
-            <h1 className="text-5xl md:text-7xl font-bold text-black mb-6">
-              Welcome to My Website
-            </h1>
-            <p className="text-xl md:text-2xl text-slate-300 mb-8">
-              Experience the future with our cutting-edge platform
-            </p>
-            <a
-              href="#pricing"
-              className="inline-block rounded-lg font-bold cursor-pointer hover:-translate-y-1 transition duration-200 bg-gradient-to-b from-primary to-primary/80 text-primary-foreground shadow-lg px-8 py-4 text-lg"
-            >
-              View Pricing
-            </a>
-          </div>
-        </div>
 
       </div>
     </div>
