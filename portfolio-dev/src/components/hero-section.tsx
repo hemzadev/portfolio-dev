@@ -5,6 +5,9 @@ import gsap from 'gsap'
 import { SplitText } from 'gsap/all'
 import { useRef } from 'react'
 import CircularText from './CircularText'
+import Lottie from 'lottie-react'
+import moroccoFlag from '../../public/Morocco flag Lottie JSON animation.json'
+
 
 export default function HeroSection() {
   const leftRef = useRef(null)
@@ -74,8 +77,20 @@ export default function HeroSection() {
           <span className="text-indigo-500">Software Engineer</span>
         </h1>
         <p className="hero-p text-gray-600 text-lg md:text-xl max-w-3xl">
-          I'm a software engineer from Morocco, passionate about designing and developing reliable, scalable, and modern digital solutions. My goal is to contribute to innovative projects within leading multinational companies and financial institutions.
+          I'm a software engineer from Morocco{' '}
+          <span className="inline-flex items-center">
+            <Lottie
+              animationData={moroccoFlag}
+              loop
+              autoplay
+              className="w-6 h-6 inline-block"
+            />
+          </span>{''}
+        , passionate about designing and developing reliable, scalable, and modern digital solutions. 
+          My goal is to contribute to innovative projects within leading multinational companies and financial institutions.
         </p>
+
+
       </div>
     </section>
   )
