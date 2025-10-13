@@ -61,18 +61,19 @@ export default function HeroSection() {
             <span className="text-indigo-600">Software Engineer</span>
           </h1>
 
+          {/* Simplified Paragraph + Fixed Flag */}
           <div className="hero-p text-base sm:text-lg md:text-xl lg:text-xl xl:text-xl text-gray-600 leading-relaxed max-w-2xl mx-auto lg:mx-0">
-            I'm a software engineer from Morocco{" "}
-            <span className="inline-flex items-center align-middle">
+            I'm a software engineer from{" "}
+            <span className="inline-flex items-center gap-1">
+              Morocco{" "}
               <Lottie
                 animationData={moroccoFlag}
                 loop
                 autoplay
-                className="w-5 h-5 sm:w-6 sm:h-6 inline-block"
+                className="w-5 h-5 sm:w-6 sm:h-6"
               />
             </span>
-            , passionate about designing and developing reliable, scalable, and modern digital solutions. My goal is to
-            contribute to innovative projects within leading{" "}
+            , and my goal is to contribute to innovative projects within leading{" "}
             <span className="font-semibold text-indigo-600">multinational companies</span> and{" "}
             <span className="font-semibold text-indigo-600">financial institutions</span>.
           </div>
