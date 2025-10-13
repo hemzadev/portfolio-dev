@@ -1,100 +1,111 @@
 "use client"
 
-import type React from "react"
+import { useEffect, useRef, useState } from "react"
 import { useGSAP } from "@gsap/react"
 import gsap from "gsap"
 import { SplitText } from "gsap/all"
-import { useRef } from "react"
-import CircularText from "./CircularText"
 import Lottie from "lottie-react"
+import CircularText from "./CircularText"
 import moroccoFlag from "../../public/Morocco flag Lottie JSON animation.json"
 
 export default function HeroSection() {
   const leftRef = useRef<HTMLDivElement>(null)
+  const imageContainerRef = useRef<HTMLDivElement>(null)
+  const circularTextRef = useRef<HTMLDivElement>(null)
 
-  useGSAP(() => {
-    const heroSplit = new SplitText(".hero-title", { type: "lines" })
-    const heroParagraphSplit = new SplitText(".hero-p", { type: "lines" })
+  // 🧮 Reposition CircularText relative to image container
+  useEffect(() => {
+    const updatePosition = () => {
+      if (!imageContainerRef.current || !circularTextRef.current) return
 
-    gsap.from(heroSplit.lines, {
-      opacity: 0,
-      yPercent: 100,
-      duration: 0.6,
-      ease: "expo.out",
-      stagger: 0.06,
-      delay: 0.4,
-    })
+      const imageRect = imageContainerRef.current.getBoundingClientRect()
+      const parentRect = leftRef.current?.getBoundingClientRect()
 
-    gsap.from(heroParagraphSplit.lines, {
-      opacity: 0,
-      yPercent: -200,
-      duration: 0.6,
-      ease: "expo.out",
-      stagger: 0.06,
-      delay: 0.6,
-    })
+      if (!parentRect) return
 
-    gsap.from(leftRef.current, {
-      opacity: 0,
-      yPercent: -100,
-      duration: 1.5,
-      ease: "power3.out",
-      delay: 0,
-    })
+      // compute offset relative to parent container
+      const offsetTop = imageRect.top - parentRect.top
+      const offsetLeft = imageRect.left - parentRect.left
+
+      // position the circular text
+      gsap.set(circularTextRef.current, {
+        top: offsetTop + imageRect.height * 0.75, // 75% down the image
+        left: offsetLeft + imageRect.width / 2 + 150,   // centered horizontally
+        xPercent: -50,
+        yPercent: -50,
+      })
+    }
+
+    updatePosition()
+    window.addEventListener("resize", updatePosition)
+
+    return () => window.removeEventListener("resize", updatePosition)
   }, [])
 
   return (
     <section className="relative flex flex-col lg:grid lg:grid-cols-2 min-h-screen w-full px-4 sm:px-6 lg:px-8 xl:p-52 py-20 lg:py-0 lg:-top-10 gap-12 lg:gap-0">
-      {/* Left Side Visuals - Order second on mobile, first on desktop */}
-      <div 
-        ref={leftRef} 
+      {/* Left side */}
+      <div
+        ref={leftRef}
         className="relative w-full max-w-sm mx-auto lg:mx-0 lg:w-96 order-2 lg:order-1 lg:-top-60 -top-20"
       >
-        {/* Top gradient part */}
+        {/* Gradient */}
         <div className="h-16 lg:h-20 w-full bg-gradient-to-t from-indigo-400 via-violet-300 to-transparent"></div>
 
-        {/* Image part */}
-        <div className="h-80 lg:h-120 w-full rounded-b-full overflow-hidden">
-          <img 
-            src="image3.jpeg" 
-            alt="Profile" 
-            className="w-full h-full object-cover" 
+        {/* Image container */}
+        <div
+          ref={imageContainerRef}
+          className="h-80 lg:h-120 w-full rounded-b-full overflow-hidden relative"
+        >
+          <img
+            src="image3.jpeg"
+            alt="Profile"
+            className="w-full h-full object-cover"
           />
         </div>
 
-        {/* CircularText positioned below the image */}
-        <div className="absolute -bottom-10 lg:-bottom-20 left-1/2 -translate-x-1/2 scale-75 lg:scale-100">
-          <CircularText 
-            text="HAMZA*BEN*AZZA*" 
-            onHover="speedUp" 
-            spinDuration={10} 
-            className="custom-class" 
-          />
+        {/* CircularText OUTSIDE but positioned via JS */}
+        <div ref={circularTextRef} className="absolute z-20 pointer-events-none">
+          <div className="scale-50 lg:scale-75">
+            <CircularText
+              text="HAMZA*BEN*AZZA*"
+              onHover="speedUp"
+              spinDuration={10}
+            />
+          </div>
         </div>
       </div>
 
-      {/* Right Side Text - Order first on mobile, second on desktop */}
+      {/* Right side */}
       <div className="relative z-10 text-center lg:text-left order-1 lg:order-2 lg:-left-50 lg:-top-20 -top-10">
-        <h1 className="hero-title text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-black mb-4 lg:mb-6 text-balance leading-tight">
+        <h1 className="hero-title text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-black mb-4 lg:mb-6 leading-tight">
           Salam, my name is{" "}
           <span className="text-indigo-500 block sm:inline">Hamza</span>{" "}
           and I'm a{" "}
-          <span className="text-indigo-500 block sm:inline">Software Engineer</span>
+          <span className="text-indigo-500 block sm:inline">
+            Software Engineer
+          </span>
         </h1>
         <div className="hero-p text-gray-600 text-base sm:text-lg lg:text-xl max-w-3xl leading-relaxed mx-auto lg:mx-0">
           I'm a software engineer from Morocco{" "}
           <span className="inline-flex items-center">
-            <Lottie 
-              animationData={moroccoFlag} 
-              loop 
-              autoplay 
-              className="w-5 h-5 sm:w-6 sm:h-6 inline-block" 
+            <Lottie
+              animationData={moroccoFlag}
+              loop
+              autoplay
+              className="w-5 h-5 sm:w-6 sm:h-6 inline-block"
             />
           </span>
-          , passionate about designing and developing reliable, scalable, and modern digital solutions. My goal is to
-          contribute to innovative projects within leading{" "}
-          <span className="font-medium text-indigo-600">multinational companies</span> and{" "}
-          <span className="font-medium text-indigo-600">financial institutions</span>.
+          , passionate about designing and developing reliable, scalable, and
+          modern digital solutions. My goal is to contribute to innovative
+          projects within leading{" "}
+          <span className="font-medium text-indigo-600">
+            multinational companies
+          </span>{" "}
+          and{" "}
+          <span className="font-medium text-indigo-600">
+            financial institutions
+          </span>.
         </div>
       </div>
     </section>
