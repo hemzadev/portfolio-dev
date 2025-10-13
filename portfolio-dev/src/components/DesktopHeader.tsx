@@ -2,6 +2,7 @@ import { useRef } from 'react'
 import { useGSAP } from '@gsap/react'
 import gsap from 'gsap'
 import Lottie from "lottie-react"
+import { ThemeToggleButton } from './themeToggle'
 
 interface DesktopHeaderProps {
   isScrolled: boolean
@@ -49,7 +50,7 @@ export default function DesktopHeader({ isScrolled, animationData, onDownloadCV,
     <header
       ref={navbarRef}
       className={`sticky top-4 z-[9999] mx-auto hidden w-full flex-row items-center justify-between self-start rounded-full bg-indigo-700/40 md:flex backdrop-blur-sm border border-border/50 shadow-lg transition-all duration-300 ${
-        isScrolled ? "max-w-3xl px-2" : "max-w-5xl px-4"
+        isScrolled ? "max-w-3xl px-6" : "max-w-5xl px-8"
       } py-2`}
       style={{
         willChange: "transform",
@@ -59,9 +60,8 @@ export default function DesktopHeader({ isScrolled, animationData, onDownloadCV,
         opacity: 0,
       }}
     >
-      <div
-        className={`z-50 flex items-center justify-center transition-all duration-300 ${isScrolled ? "ml-4" : ""}`}
-      >
+      {/* Logo Section */}
+      <div className="flex items-center justify-center">
         {animationData && (
           <div className="w-12 h-12">
             <Lottie animationData={animationData} loop={true} />
@@ -69,11 +69,12 @@ export default function DesktopHeader({ isScrolled, animationData, onDownloadCV,
         )}
       </div>
 
-      <div className="absolute inset-0 hidden flex-1 flex-row items-center justify-center space-x-2 text-sm font-medium text-zinc-100 transition duration-200 hover:text-foreground md:flex md:space-x-2">
+      {/* Navigation Items - No absolute positioning */}
+      <div className="flex flex-1 flex-row items-center justify-center space-x-2 text-sm font-medium text-zinc-100 transition duration-200 hover:text-foreground md:space-x-4">
         {NAV_ITEMS.map((item) => (
           <a
             key={item.id}
-            className="relative px-4 py-2 text-zinc-50 hover:text-foreground transition-colors cursor-pointer"
+            className="relative px-4 py-2 text-zinc-50 hover:text-foreground transition-colors cursor-pointer whitespace-nowrap"
             onClick={handleNavClick(item.id)}
           >
             <span className="relative z-20">{item.label}</span>
@@ -81,10 +82,18 @@ export default function DesktopHeader({ isScrolled, animationData, onDownloadCV,
         ))}
       </div>
 
-      <div className="flex items-center gap-4">
+      {/* Actions Section */}
+      <div className="flex items-center gap-3">
+        <ThemeToggleButton 
+          variant="circle"
+          start="center"
+          blur={false}
+          className="size-9 hover:scale-105 transition-transform duration-200 z-50 relative"
+        />
+        
         <button
           onClick={onDownloadCV}
-          className="rounded-md font-bold relative cursor-pointer hover:-translate-y-0.5 transition duration-200 inline-block text-center bg-gradient-to-b from-indigo-500 to-indigo-600 text-white shadow-[0px_2px_0px_0px_rgba(255,255,255,0.2)_inset] px-4 py-2 text-sm"
+          className="rounded-md font-bold relative cursor-pointer hover:-translate-y-0.5 transition duration-200 inline-block text-center bg-gradient-to-b from-indigo-500 to-indigo-600 text-white shadow-[0px_2px_0px_0px_rgba(255,255,255,0.2)_inset] px-4 py-2 text-sm z-50"
         >
           Download CV
         </button>
