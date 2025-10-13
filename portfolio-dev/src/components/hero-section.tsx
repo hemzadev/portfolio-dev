@@ -65,7 +65,7 @@ export default function HeroSection() {
         </div>
 
         {/* CircularText OUTSIDE but positioned via JS */}
-        <div ref={circularTextRef} className="absolute z-20 pointer-events-none">
+        <div ref={circularTextRef} className="absolute z-20">
           <div className="scale-50 lg:scale-75">
             <CircularText
               text="HAMZA*BEN*AZZA*"
