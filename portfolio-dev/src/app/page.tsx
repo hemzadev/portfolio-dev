@@ -1,11 +1,9 @@
 'use client'
 import { useState, useEffect } from 'react'
 import HeroSection from '@/components/hero-section'
-import TechLogoLoop from '@/components/TechLogoLoop'
 import DesktopHeader from '@/components/DesktopHeader'
 import MobileHeader from '@/components/MobileHeader'
 import MobileMenu from '@/components/MobileMenu'
-import TechSkillsGrid from '@/components/TechSkillsGrid'
 
 export default function Home() {
   const [isScrolled, setIsScrolled] = useState(false)
@@ -90,8 +88,8 @@ export default function Home() {
           onDownloadCV={handleDownloadCV}
         />
 
+        {/* HeroSection now includes TechSkillsGrid internally */}
         <HeroSection />
-        <TechSkillsGrid />
       </div>
     </div>
   )
