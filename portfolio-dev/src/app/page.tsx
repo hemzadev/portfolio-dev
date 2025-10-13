@@ -11,11 +11,7 @@ export default function Home() {
   const [animationData, setAnimationData] = useState(null)
   const [isNavbarReady, setIsNavbarReady] = useState(false)
 
-  useEffect(() => {
-    const root = window.document.documentElement
-    root.classList.remove("light", "system")
-    root.classList.add("dark")
-  }, [])
+  // REMOVED: The useEffect that was forcing dark mode
 
   useEffect(() => {
     const handleScroll = () => {
@@ -59,37 +55,42 @@ export default function Home() {
   }
 
   return (
-    <div className="min-h-screen bg-black relative">
-      <div className="min-h-screen w-full relative bg-black">
-        {/* Pearl Mist Background with Top Glow */}
+    <div className="min-h-screen bg-background relative">
+      <div className="min-h-screen w-full relative bg-gradient-to-b from-background to-background">
+        {/* Pearl Mist Background with Top Glow - Now theme-aware */}
         <div
-          className="absolute inset-0 z-0"
+          className="absolute inset-0 z-0 transition-opacity duration-300"
           style={{
             background: "radial-gradient(125% 125% at 50% 10%, #fff 40%, #6366f1 100%)",
           }}
         />
+        
+        {/* Dark mode overlay */}
+        <div className="absolute inset-0 z-0 bg-black dark:opacity-90 opacity-0 transition-opacity duration-300" />
 
-        <DesktopHeader
-          isScrolled={isScrolled}
-          animationData={animationData}
-          onDownloadCV={handleDownloadCV}
-          onNavbarReady={() => setIsNavbarReady(true)}
-        />
+        <div className="relative z-10">
+          <DesktopHeader
+            isScrolled={isScrolled}
+            animationData={animationData}
+            onDownloadCV={handleDownloadCV}
+            onNavbarReady={() => setIsNavbarReady(true)}
+          />
 
-        <MobileHeader
-          animationData={animationData}
-          isMobileMenuOpen={isMobileMenuOpen}
-          onToggleMenu={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-        />
+          <MobileHeader
+            animationData={animationData}
+            isMobileMenuOpen={isMobileMenuOpen}
+            onToggleMenu={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          />
 
-        <MobileMenu
-          isOpen={isMobileMenuOpen}
-          onNavClick={handleMobileNavClick}
-          onDownloadCV={handleDownloadCV}
-        />
+          <MobileMenu
+            isOpen={isMobileMenuOpen}
+            onNavClick={handleMobileNavClick}
+            onDownloadCV={handleDownloadCV}
+          />
 
-        {/* HeroSection now includes TechSkillsGrid internally */}
-        <HeroSection />
+          {/* HeroSection now includes TechSkillsGrid internally */}
+          <HeroSection />
+        </div>
       </div>
     </div>
   )
