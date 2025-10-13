@@ -26,7 +26,7 @@ export default function TechLogoLoop() {
         target="_blank"
         rel="noopener noreferrer"
         aria-label={`Learn more about ${skill.name}`}
-        className="flex items-center justify-center gap-3 px-5 py-2 bg-white dark:bg-gray-800 rounded-full border border-gray-200 dark:border-gray-700 shadow-sm hover:shadow-md transition-all duration-300 group/item"
+        className="flex items-center justify-center gap-3 px-5 py-2 bg-white dark:bg-indigo-900 rounded-full border border-gray-200 dark:border-gray-700 shadow-sm hover:shadow-md transition-all duration-300 group/item"
       >
         <img
           src={skill.logo}
@@ -44,7 +44,7 @@ export default function TechLogoLoop() {
   }));
 
   return (
-    <div className="relative py-10 flex items-center justify-between overflow-hidden">
+    <div className="relative flex items-center justify-between overflow-hidden">
       <LogoLoop
         logos={techLogos}
         speed={80}
@@ -54,7 +54,7 @@ export default function TechLogoLoop() {
         pauseOnHover
         scaleOnHover
         fadeOut
-        fadeOutColor="gray"
+        fadeOutColor="indigo"
         ariaLabel="Technology skills"
       />
     </div>
