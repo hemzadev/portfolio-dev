@@ -91,7 +91,8 @@ export default function Home() {
 
           {/* HeroSection now includes TechSkillsGrid internally */}
           <HeroSection />
-          <ManifestoSection />
+          <div className='px-25 py-5'><ManifestoSection /></div>
+          
         </div>
       </div>
     </div>

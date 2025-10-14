@@ -21,7 +21,7 @@ export default function CardFlipExtended({
 
     return (
         <div
-            className="relative w-full max-w-[280px] h-[320px] group [perspective:2000px]"
+            className="relative w-full max-w-[450px] h-[490px] group [perspective:2000px]"
             onMouseEnter={() => setIsFlipped(true)}
             onMouseLeave={() => setIsFlipped(false)}
         >
@@ -88,7 +88,7 @@ export default function CardFlipExtended({
                                         "bg-gradient-to-br from-orange-500/20 via-orange-500/10 to-transparent"
                                     )}
                                 />
-                                <Repeat2 className="relative z-10 w-4 h-4 text-indigo-500 transition-transform duration-300 group-hover/icon:scale-110 group-hover/icon:-rotate-12" />
+                                <Repeat2 className="relative z-10 w-4 h-4 text-orange-500 transition-transform duration-300 group-hover/icon:scale-110 group-hover/icon:-rotate-12" />
                             </div>
                         </div>
                     </div>

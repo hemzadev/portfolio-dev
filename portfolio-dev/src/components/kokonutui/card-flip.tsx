@@ -29,7 +29,7 @@ export default function CardFlip({
 
   return (
     <div
-      className="relative w-full max-w-[280px] h-[320px] group [perspective:2000px]"
+      className="relative w-full max-w-[450px] h-[490px] group [perspective:2000px]"
       onMouseEnter={() => setIsFlipped(true)}
       onMouseLeave={() => setIsFlipped(false)}
     >
@@ -66,10 +66,10 @@ export default function CardFlip({
                     className={cn(
                       "absolute w-[50px] h-[50px]",
                       "rounded-[140px]",
-                      "animate-[scale_3s_linear_infinite]",
+                      "animate-[indigo-scale_3s_linear_infinite]",
                       "opacity-0",
                       "shadow-[0_0_50px_rgba(79,70,229,0.5)]", // Indigo glow
-                      "group-hover:animate-[scale_2s_linear_infinite]"
+                      "group-hover:animate-[indigo-scale_2s_linear_infinite]"
                     )}
                     style={{
                       animationDelay: `${i * 0.3}s`,
@@ -180,7 +180,7 @@ export default function CardFlip({
       </div>
 
       <style jsx>{`
-        @keyframes scale {
+        @keyframes indigo-scale {
           0% {
             transform: scale(2);
             opacity: 0;
