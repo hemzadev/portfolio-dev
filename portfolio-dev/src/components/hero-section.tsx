@@ -90,17 +90,26 @@ export default function HeroSection() {
 
         </div>
       </div>
+      <div className="w-full relative py-8 lg:py-20">
+  {/* Top Separator */}
+  <div className="absolute top-15 left-0 w-full border-t border-gray-200 dark:border-gray-800" />
 
-      {/* Top Separator */}
-      <div className="border-t border-gray-200 dark:border-gray-800 w-full z-10" />
+  {/* Controlled Spacing Above Grid */}
+  <div className="" /> {/* ← adjust this height to control space between top border and grid */}
 
-      {/* Skills Section */}
-      <div className="w-full bg-white dark:bg-gray-950 py-8 lg:py-20">
-        <TechSkillsGrid />
-      </div>
+  {/* Skills Section */}
+  <div className="relative z-10">
+    <TechSkillsGrid />
+  </div>
 
-      {/* Bottom Separator */}
-      <div className="border-t border-gray-200 dark:border-gray-800 w-full z-20" />
+  {/* Controlled Spacing Below Grid */}
+  <div className="h-8 lg:h-12" /> {/* ← adjust this height to control space between grid and bottom border */}
+
+  {/* Bottom Separator */}
+  <div className="absolute bottom-27 left-0 w-full border-t border-gray-200 dark:border-gray-800" />
+</div>
+
+
     </section>
   )
 }
