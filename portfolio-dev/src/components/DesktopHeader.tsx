@@ -3,6 +3,7 @@ import { useGSAP } from '@gsap/react'
 import gsap from 'gsap'
 import Lottie from "lottie-react"
 import { ThemeToggleButton } from './themeToggle'
+import { Skiper4 } from './skiper4'
 
 interface DesktopHeaderProps {
   isScrolled: boolean
@@ -83,6 +84,7 @@ export default function DesktopHeader({ isScrolled, animationData, onDownloadCV,
 
       {/* Actions Section */}
       <div className="flex items-center gap-3">
+  
         <ThemeToggleButton 
           variant="circle"
           start="center"

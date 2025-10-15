@@ -3,10 +3,8 @@ import CardFlipExtended from "./card-flip-extended";
 
 export default function ManifestoSection (){
     return (
-        <div className="flex justify-between">
-            <CardFlip/>
+        <div className="flex justify-center">
             <CardFlipExtended/>
-            <CardFlip/>
         </div>
         
     )
