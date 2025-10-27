@@ -6,6 +6,7 @@ import MobileHeader from '@/components/MobileHeader'
 import MobileMenu from '@/components/MobileMenu'
 import ManifestoSection from '@/components/manifesto-section'
 import ExperienceSection from '@/components/experience-section'
+import TechEnvironmentSection from '@/components/tech-env-section'
 
 export default function Home() {
   const [isScrolled, setIsScrolled] = useState(false)
@@ -93,6 +94,7 @@ export default function Home() {
           {/* HeroSection now includes TechSkillsGrid internally */}
           <HeroSection />
           <ExperienceSection/>
+          <TechEnvironmentSection/>
         </div>
       </div>
     </div>
