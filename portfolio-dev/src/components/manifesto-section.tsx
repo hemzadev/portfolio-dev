@@ -4,7 +4,9 @@ import CardFlipExtended from "./card-flip-extended";
 export default function ManifestoSection (){
     return (
         <div className="flex justify-center">
-            <CardFlipExtended/>
+            <CardFlipExtended 
+            theme="purple"
+            variant="consulting"/>
         </div>
         
     )

@@ -53,8 +53,6 @@ export default function TechLogoLoop() {
         gap={30}
         pauseOnHover
         scaleOnHover
-        fadeOut
-        fadeOutColor="indigo"
         ariaLabel="Technology skills"
       />
     </div>

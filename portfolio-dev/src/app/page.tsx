@@ -5,6 +5,7 @@ import DesktopHeader from '@/components/DesktopHeader'
 import MobileHeader from '@/components/MobileHeader'
 import MobileMenu from '@/components/MobileMenu'
 import ManifestoSection from '@/components/manifesto-section'
+import ExperienceSection from '@/components/experience-section'
 
 export default function Home() {
   const [isScrolled, setIsScrolled] = useState(false)
@@ -91,8 +92,7 @@ export default function Home() {
 
           {/* HeroSection now includes TechSkillsGrid internally */}
           <HeroSection />
-          <div className='px-25 py-5'><ManifestoSection /></div>
-          
+          <ExperienceSection/>
         </div>
       </div>
     </div>
