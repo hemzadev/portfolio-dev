@@ -1,162 +1,104 @@
 "use client"
 
 import React, { useState, useEffect, useRef } from "react"
-import { Code, Server, Cloud, GitBranch, Database, Zap, Brain, Link, Hammer, X } from "lucide-react"
+import { Code, TestTube2, Cloud, Server, Zap, Brain, Link, Container, Workflow, X } from "lucide-react"
 
-interface TechBlock {
+interface Phase {
   id: string
   title: string
   icon: React.ReactNode
   description: string
   color: string
-  skills: string[]
-  experience: number // 0-100
-  masteryContext: string
+  tools: string[]
+  details: string
   position: { x: number; y: number }
   connections: string[]
 }
 
-interface Particle {
-  id: string
-  fromId: string
-  toId: string
-  progress: number
-  speed: number
-}
-
-interface Connection {
-  from: string
-  to: string
-  color: string
-}
-
-export default function TechEcosystemCanvas() {
+export default function DevOpsLifecycle() {
   const canvasRef = useRef<HTMLCanvasElement>(null)
-  const [selectedBlock, setSelectedBlock] = useState<string | null>(null)
-  const [hoveredBlock, setHoveredBlock] = useState<string | null>(null)
-  const [particles, setParticles] = useState<Particle[]>([])
+  const [selectedPhase, setSelectedPhase] = useState<string | null>(null)
+  const [hoveredPhase, setHoveredPhase] = useState<string | null>(null)
+  const [particles, setParticles] = useState<Array<{id: string, fromId: string, toId: string, progress: number, speed: number}>>([])
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 })
-  const animationFrameRef = useRef<number>()
 
-  const techBlocks: TechBlock[] = [
+  const phases: Phase[] = [
     {
-      id: "frontend",
-      title: "Frontend",
+      id: "planning",
+      title: "Planning & Design",
+      icon: <Workflow className="w-6 h-6" />,
+      description: "Requirements, Architecture, System Design",
+      color: "#4f46e5",
+      tools: ["Agile Methodology", "System Design", "API Design", "Database Design", "Architecture Patterns"],
+      details: "Collaborate with stakeholders to define project requirements and technical specifications. Design scalable system architecture and create comprehensive technical documentation.",
+      position: { x: 100, y: 50 },
+      connections: ["development", "monitoring"]
+    },
+    {
+      id: "development",
+      title: "Development",
       icon: <Code className="w-6 h-6" />,
-      description: "React, Next.js, TypeScript, Tailwind",
-      color: "#4f46e5",
-      skills: ["React 18+", "Next.js 14+", "TypeScript", "Tailwind CSS", "State Management"],
-      experience: 95,
-      masteryContext: "Expert in modern React patterns, server components, and performance optimization.",
-      position: { x: 200, y: 150 },
-      connections: ["backend", "ai"],
-    },
-    {
-      id: "backend",
-      title: "Backend",
-      icon: <Server className="w-6 h-6" />,
-      description: "Node.js, Express, APIs, Microservices",
+      description: "Coding, Version Control, Collaboration",
       color: "#6366f1",
-      skills: ["Node.js 20+", "Express.js", "REST APIs", "Microservices", "Auth"],
-      experience: 90,
-      masteryContext: "Advanced expertise in building scalable APIs and microservices architecture.",
-      position: { x: 500, y: 150 },
-      connections: ["database", "blockchain", "ai"],
+      tools: ["React/Next.js", "Node.js", "TypeScript", "Git/GitHub", "Code Review"],
+      details: "Implement features using modern frameworks and best practices. Conduct code reviews and maintain high code quality standards. Collaborate with team members using version control.",
+      position: { x: 400, y: 50 },
+      connections: ["testing", "specialized"]
     },
     {
-      id: "database",
-      title: "Database",
-      icon: <Database className="w-6 h-6" />,
-      description: "PostgreSQL, MongoDB, Redis, ORMs",
+      id: "testing",
+      title: "Testing & CI/CD",
+      icon: <TestTube2 className="w-6 h-6" />,
+      description: "Automated Testing, Continuous Integration",
       color: "#818cf8",
-      skills: ["PostgreSQL 15+", "MongoDB 6+", "Redis 7+", "Prisma", "Optimization"],
-      experience: 85,
-      masteryContext: "Proficient in SQL/NoSQL databases, data modeling, and query optimization.",
-      position: { x: 800, y: 150 },
-      connections: [],
+      tools: ["Jest/Cypress", "GitHub Actions", "Docker", "Automated Pipelines", "Quality Gates"],
+      details: "Implement comprehensive testing strategies including unit, integration, and end-to-end tests. Set up CI/CD pipelines for automated testing and deployment.",
+      position: { x: 700, y: 50 },
+      connections: ["deployment"]
     },
     {
-      id: "github",
-      title: "GitHub",
-      icon: <GitBranch className="w-6 h-6" />,
-      description: "Version Control, Collaboration",
-      color: "#4338ca",
-      skills: ["Git", "GitHub", "Branching", "Code Review", "Collaboration"],
-      experience: 90,
-      masteryContext: "Expert in Git workflows and collaborative development.",
-      position: { x: 200, y: 400 },
-      connections: ["cicd"],
-    },
-    {
-      id: "cicd",
-      title: "CI/CD",
-      icon: <Zap className="w-6 h-6" />,
-      description: "Automation, Testing, Deployment",
-      color: "#6366f1",
-      skills: ["GitHub Actions", "Docker", "Testing", "Deployment", "Monitoring"],
-      experience: 80,
-      masteryContext: "Advanced in CI/CD pipelines and automated deployment workflows.",
-      position: { x: 500, y: 400 },
-      connections: ["cloud"],
-    },
-    {
-      id: "cloud",
-      title: "Cloud",
+      id: "deployment",
+      title: "Deployment",
       icon: <Cloud className="w-6 h-6" />,
-      description: "AWS, Vercel, Infrastructure",
-      color: "#818cf8",
-      skills: ["AWS", "Vercel", "Docker", "Kubernetes", "Serverless"],
-      experience: 75,
-      masteryContext: "Proficient in cloud deployment and infrastructure management.",
-      position: { x: 800, y: 400 },
-      connections: [],
-    },
-    {
-      id: "ai",
-      title: "AI & ML",
-      icon: <Brain className="w-6 h-6" />,
-      description: "Machine Learning, AI Integration",
+      description: "Cloud Infrastructure, Containerization",
       color: "#4f46e5",
-      skills: ["TensorFlow", "PyTorch", "OpenAI", "LangChain", "Computer Vision"],
-      experience: 70,
-      masteryContext: "Experienced in ML model development and AI integration.",
-      position: { x: 200, y: 650 },
-      connections: [],
+      tools: ["AWS/Cloud", "Kubernetes", "Docker", "Infrastructure as Code", "Load Balancing"],
+      details: "Deploy applications to cloud platforms using containerization and orchestration tools. Implement infrastructure as code for reproducible environments.",
+      position: { x: 100, y: 250 },
+      connections: ["monitoring", "specialized"]
     },
     {
-      id: "blockchain",
-      title: "Blockchain",
-      icon: <Link className="w-6 h-6" />,
-      description: "Smart Contracts, Web3, DApps",
+      id: "monitoring",
+      title: "Monitoring & Scale",
+      icon: <Zap className="w-6 h-6" />,
+      description: "Observability, Performance, Scaling",
       color: "#6366f1",
-      skills: ["Solidity", "Web3.js", "Ethereum", "Smart Contracts", "DeFi"],
-      experience: 65,
-      masteryContext: "Skilled in blockchain development and smart contract creation.",
-      position: { x: 500, y: 650 },
-      connections: [],
+      tools: ["Performance Monitoring", "Logging", "Auto-scaling", "APM Tools", "Alerting"],
+      details: "Monitor application performance and system health using modern observability tools. Implement logging, metrics, and tracing for comprehensive visibility.",
+      position: { x: 400, y: 250 },
+      connections: ["planning"]
     },
     {
-      id: "tools",
-      title: "Fundamentals",
-      icon: <Hammer className="w-6 h-6" />,
-      description: "Best Practices & Principles",
+      id: "specialized",
+      title: "Specialized Tech",
+      icon: <Brain className="w-6 h-6" />,
+      description: "AI, Blockchain, Advanced Systems",
       color: "#818cf8",
-      skills: ["SOLID", "Design Patterns", "Clean Code", "Testing", "Architecture"],
-      experience: 95,
-      masteryContext: "Strong foundation in software engineering fundamentals and best practices.",
-      position: { x: 800, y: 650 },
-      connections: [],
-    },
+      tools: ["AI/ML Integration", "Blockchain", "Microservices", "Container Orchestration"],
+      details: "Leverage advanced technologies like AI/ML, blockchain, and microservices to build cutting-edge solutions. Experience with complex system architectures.",
+      position: { x: 700, y: 250 },
+      connections: []
+    }
   ]
 
-  const connections: Connection[] = [
-    { from: "frontend", to: "backend", color: "#4f46e5" },
-    { from: "backend", to: "database", color: "#6366f1" },
-    { from: "frontend", to: "ai", color: "#818cf8" },
-    { from: "backend", to: "ai", color: "#6366f1" },
-    { from: "backend", to: "blockchain", color: "#4f46e5" },
-    { from: "github", to: "cicd", color: "#4338ca" },
-    { from: "cicd", to: "cloud", color: "#6366f1" },
+  const connections = [
+    { from: "planning", to: "development", color: "#4f46e5" },
+    { from: "development", to: "testing", color: "#6366f1" },
+    { from: "testing", to: "deployment", color: "#818cf8" },
+    { from: "deployment", to: "monitoring", color: "#4f46e5" },
+    { from: "monitoring", to: "planning", color: "#6366f1" },
+    { from: "development", to: "specialized", color: "#818cf8" },
+    { from: "deployment", to: "specialized", color: "#4f46e5" },
   ]
 
   // Initialize particles
@@ -175,21 +117,20 @@ export default function TechEcosystemCanvas() {
 
   // Animation loop
   useEffect(() => {
+    let animationFrameId: number
+
     const animate = () => {
-      setParticles((prev) =>
-        prev.map((p) => ({
+      setParticles(prev =>
+        prev.map(p => ({
           ...p,
           progress: p.progress >= 1 ? 0 : p.progress + p.speed,
         }))
       )
-      animationFrameRef.current = requestAnimationFrame(animate)
+      animationFrameId = requestAnimationFrame(animate)
     }
-    animationFrameRef.current = requestAnimationFrame(animate)
-    return () => {
-      if (animationFrameRef.current) {
-        cancelAnimationFrame(animationFrameRef.current)
-      }
-    }
+
+    animationFrameId = requestAnimationFrame(animate)
+    return () => cancelAnimationFrame(animationFrameId)
   }, [])
 
   // Canvas drawing
@@ -197,7 +138,7 @@ export default function TechEcosystemCanvas() {
     const canvas = canvasRef.current
     if (!canvas) return
 
-    const ctx = canvas.getContext("2d")
+    const ctx = canvas.getContext('2d')
     if (!ctx) return
 
     const draw = () => {
@@ -205,14 +146,14 @@ export default function TechEcosystemCanvas() {
 
       // Draw connections
       connections.forEach((conn) => {
-        const fromBlock = techBlocks.find((b) => b.id === conn.from)
-        const toBlock = techBlocks.find((b) => b.id === conn.to)
-        if (!fromBlock || !toBlock) return
+        const fromPhase = phases.find((p) => p.id === conn.from)
+        const toPhase = phases.find((p) => p.id === conn.to)
+        if (!fromPhase || !toPhase) return
 
-        const x1 = fromBlock.position.x + 100
-        const y1 = fromBlock.position.y + 75
-        const x2 = toBlock.position.x + 100
-        const y2 = toBlock.position.y + 75
+        const x1 = fromPhase.position.x + 100
+        const y1 = fromPhase.position.y + 75
+        const x2 = toPhase.position.x + 100
+        const y2 = toPhase.position.y + 75
 
         // Draw line
         ctx.strokeStyle = "#e0e7ff"
@@ -242,14 +183,14 @@ export default function TechEcosystemCanvas() {
 
       // Draw particles
       particles.forEach((particle) => {
-        const fromBlock = techBlocks.find((b) => b.id === particle.fromId)
-        const toBlock = techBlocks.find((b) => b.id === particle.toId)
-        if (!fromBlock || !toBlock) return
+        const fromPhase = phases.find((p) => p.id === particle.fromId)
+        const toPhase = phases.find((p) => p.id === particle.toId)
+        if (!fromPhase || !toPhase) return
 
-        const x1 = fromBlock.position.x + 100
-        const y1 = fromBlock.position.y + 75
-        const x2 = toBlock.position.x + 100
-        const y2 = toBlock.position.y + 75
+        const x1 = fromPhase.position.x + 100
+        const y1 = fromPhase.position.y + 75
+        const x2 = toPhase.position.x + 100
+        const y2 = toPhase.position.y + 75
 
         const x = x1 + (x2 - x1) * particle.progress
         const y = y1 + (y2 - y1) * particle.progress
@@ -269,15 +210,15 @@ export default function TechEcosystemCanvas() {
     }
 
     draw()
-  }, [particles, techBlocks, connections])
+  }, [particles, phases])
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     const rect = e.currentTarget.getBoundingClientRect()
     setMousePos({ x: e.clientX - rect.left, y: e.clientY - rect.top })
 
     // Check hover
-    const hovered = techBlocks.find((block) => {
-      const { x, y } = block.position
+    const hovered = phases.find((phase) => {
+      const { x, y } = phase.position
       return (
         mousePos.x >= x &&
         mousePos.x <= x + 200 &&
@@ -285,7 +226,7 @@ export default function TechEcosystemCanvas() {
         mousePos.y <= y + 150
       )
     })
-    setHoveredBlock(hovered?.id || null)
+    setHoveredPhase(hovered?.id || null)
   }
 
   const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -293,110 +234,120 @@ export default function TechEcosystemCanvas() {
     const clickX = e.clientX - rect.left
     const clickY = e.clientY - rect.top
 
-    const clicked = techBlocks.find((block) => {
-      const { x, y } = block.position
+    const clicked = phases.find((phase) => {
+      const { x, y } = phase.position
       return clickX >= x && clickX <= x + 200 && clickY >= y && clickY <= y + 150
     })
 
     if (clicked) {
-      setSelectedBlock(clicked.id)
+      setSelectedPhase(clicked.id)
     }
   }
 
-  const selected = techBlocks.find((b) => b.id === selectedBlock)
-  const hovered = techBlocks.find((b) => b.id === hoveredBlock)
+  const selected = phases.find((p) => p.id === selectedPhase)
+  const hovered = phases.find((p) => p.id === hoveredPhase)
 
   return (
-    <section className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-indigo-50 py-20 px-4">
-      <div className="max-w-[1400px] mx-auto">
+    <section className="min-h-screen bg-gradient-to-br from-slate-50 to-indigo-50 py-12 px-4">
+      <div className="max-w-6xl mx-auto">
         {/* Header */}
-        <div className="mb-16 text-center">
-          <div className="w-16 h-1 bg-indigo-600 mx-auto mb-6"></div>
-          <h1 className="text-6xl md:text-7xl font-bold text-slate-900 mb-6">Tech Ecosystem</h1>
-          <p className="text-xl text-slate-600 max-w-3xl mx-auto">
-            Interactive architecture showcasing full-stack expertise and emerging technologies
+        <div className="text-center mb-12">
+          <div className="w-12 h-1 bg-indigo-600 mx-auto mb-4"></div>
+          <h1 className="text-4xl font-bold text-slate-900 mb-4">
+            DevOps Lifecycle Architecture
+          </h1>
+          <p className="text-lg text-slate-600 max-w-3xl mx-auto">
+            End-to-end involvement in modern software development practices, from initial planning 
+            to production monitoring and specialized technology integration.
           </p>
         </div>
 
-        {/* Canvas Container */}
+        {/* Architecture Diagram Container */}
         <div
-          className="relative bg-white border-4 border-slate-900 mb-12 overflow-hidden"
-          style={{ height: "850px" }}
+          className="relative bg-white border-4 border-slate-900 overflow-hidden mb-8"
+          style={{ height: "500px" }}
           onMouseMove={handleMouseMove}
           onClick={handleClick}
         >
-          <canvas ref={canvasRef} width={1400} height={850} className="absolute inset-0" />
+          <canvas ref={canvasRef} width={1000} height={500} className="absolute inset-0" />
 
-          {/* Tech Blocks */}
-          {techBlocks.map((block) => (
+          {/* Phase Nodes */}
+          {phases.map((phase) => (
             <div
-              key={block.id}
+              key={phase.id}
               className={`absolute cursor-pointer transition-all duration-200 ${
-                hoveredBlock === block.id ? "z-20" : "z-10"
+                hoveredPhase === phase.id ? "z-20" : "z-10"
               }`}
               style={{
-                left: `${block.position.x}px`,
-                top: `${block.position.y}px`,
+                left: `${phase.position.x}px`,
+                top: `${phase.position.y}px`,
                 width: "200px",
                 height: "150px",
               }}
             >
-              {/* Block */}
+              {/* Phase Card */}
               <div
                 className={`w-full h-full bg-white border-4 transition-all duration-200 ${
-                  hoveredBlock === block.id
+                  hoveredPhase === phase.id
                     ? "border-indigo-600 shadow-2xl -translate-y-2"
                     : "border-slate-900 shadow-lg"
                 }`}
                 style={{
-                  backgroundColor: hoveredBlock === block.id ? `${block.color}10` : "white",
+                  backgroundColor: hoveredPhase === phase.id ? `${phase.color}10` : "white",
                 }}
               >
                 {/* Icon */}
                 <div
                   className="w-12 h-12 border-4 border-slate-900 flex items-center justify-center m-4"
-                  style={{ backgroundColor: block.color }}
+                  style={{ backgroundColor: phase.color }}
                 >
-                  <div className="text-white">{block.icon}</div>
+                  <div className="text-white">{phase.icon}</div>
                 </div>
 
-                {/* Title */}
+                {/* Content */}
                 <div className="px-4">
-                  <h3 className="text-lg font-bold text-slate-900 mb-1">{block.title}</h3>
-                  <p className="text-xs text-slate-600 mb-3 leading-tight">{block.description}</p>
+                  <h3 className="text-lg font-bold text-slate-900 mb-1">{phase.title}</h3>
+                  <p className="text-xs text-slate-600 mb-3 leading-tight">{phase.description}</p>
 
-                  {/* Experience Bar */}
-                  <div className="space-y-1">
-                    <div className="flex justify-between items-center">
-                      <span className="text-xs font-bold text-slate-700">Experience</span>
-                      <span className="text-xs font-bold" style={{ color: block.color }}>
-                        {block.experience}%
-                      </span>
-                    </div>
-                    <div className="w-full h-2 bg-slate-200 border-2 border-slate-900">
-                      <div
-                        className="h-full transition-all duration-500"
+                  {/* Tools Preview */}
+                  <div className="flex flex-wrap gap-1">
+                    {phase.tools.slice(0, 2).map((tool, idx) => (
+                      <span
+                        key={idx}
+                        className="text-xs px-1 py-0.5 border border-slate-900 font-bold"
                         style={{
-                          width: `${block.experience}%`,
-                          backgroundColor: block.color,
+                          backgroundColor: `${phase.color}15`,
+                          color: phase.color,
                         }}
-                      />
-                    </div>
+                      >
+                        {tool}
+                      </span>
+                    ))}
+                    {phase.tools.length > 2 && (
+                      <span className="text-xs text-slate-500 font-bold">
+                        +{phase.tools.length - 2}
+                      </span>
+                    )}
                   </div>
                 </div>
               </div>
 
               {/* Hover Tooltip */}
-              {hoveredBlock === block.id && (
+              {hoveredPhase === phase.id && (
                 <div className="absolute left-full ml-4 top-0 w-64 bg-slate-900 border-4 border-slate-900 text-white p-4 shadow-2xl z-30 pointer-events-none">
-                  <h4 className="font-bold text-sm mb-2 text-indigo-300">Key Skills</h4>
+                  <h4 className="font-bold text-sm mb-2 text-indigo-300">Key Tools</h4>
                   <div className="space-y-1">
-                    {block.skills.map((skill, idx) => (
+                    {phase.tools.slice(0, 4).map((tool, idx) => (
                       <div key={idx} className="text-xs flex items-center gap-2">
-                        <div className="w-1 h-1" style={{ backgroundColor: block.color }}></div>
-                        {skill}
+                        <div className="w-1 h-1" style={{ backgroundColor: phase.color }}></div>
+                        {tool}
                       </div>
                     ))}
+                    {phase.tools.length > 4 && (
+                      <div className="text-xs text-slate-400 mt-1">
+                        +{phase.tools.length - 4} more tools
+                      </div>
+                    )}
                   </div>
                   <div className="mt-3 pt-3 border-t border-slate-700">
                     <p className="text-xs text-slate-300">Click to view full details</p>
@@ -408,7 +359,7 @@ export default function TechEcosystemCanvas() {
         </div>
 
         {/* Side Panel for Details */}
-        {selectedBlock && selected && (
+        {selectedPhase && selected && (
           <div className="fixed right-0 top-0 h-full w-[500px] bg-white border-l-4 border-slate-900 shadow-2xl z-50 overflow-y-auto">
             {/* Header */}
             <div className="sticky top-0 bg-slate-900 text-white p-6 border-b-4 border-slate-900 flex items-start justify-between">
@@ -425,7 +376,7 @@ export default function TechEcosystemCanvas() {
                 </div>
               </div>
               <button
-                onClick={() => setSelectedBlock(null)}
+                onClick={() => setSelectedPhase(null)}
                 className="w-10 h-10 border-2 border-white hover:bg-white hover:text-slate-900 transition-colors flex items-center justify-center flex-shrink-0"
               >
                 <X className="w-5 h-5" />
@@ -434,44 +385,23 @@ export default function TechEcosystemCanvas() {
 
             {/* Content */}
             <div className="p-6 space-y-6">
-              {/* Experience */}
+              {/* Details */}
               <div>
                 <h3 className="text-sm font-bold text-slate-500 mb-3 uppercase tracking-wider">
-                  Experience Level
-                </h3>
-                <div className="flex items-center gap-4">
-                  <div className="flex-1 h-4 bg-slate-200 border-2 border-slate-900">
-                    <div
-                      className="h-full transition-all duration-500"
-                      style={{
-                        width: `${selected.experience}%`,
-                        backgroundColor: selected.color,
-                      }}
-                    />
-                  </div>
-                  <span className="text-2xl font-bold" style={{ color: selected.color }}>
-                    {selected.experience}%
-                  </span>
-                </div>
-              </div>
-
-              {/* Mastery */}
-              <div>
-                <h3 className="text-sm font-bold text-slate-500 mb-3 uppercase tracking-wider">
-                  Expertise
+                  Role & Responsibilities
                 </h3>
                 <div className="bg-slate-50 border-2 border-slate-900 p-4">
-                  <p className="text-slate-700 leading-relaxed">{selected.masteryContext}</p>
+                  <p className="text-slate-700 leading-relaxed">{selected.details}</p>
                 </div>
               </div>
 
-              {/* Skills */}
+              {/* Tools & Technologies */}
               <div>
                 <h3 className="text-sm font-bold text-slate-500 mb-3 uppercase tracking-wider">
-                  Key Technologies
+                  Tools & Technologies
                 </h3>
                 <div className="grid grid-cols-2 gap-3">
-                  {selected.skills.map((skill, idx) => (
+                  {selected.tools.map((tool, idx) => (
                     <div
                       key={idx}
                       className="border-2 border-slate-900 p-3 font-bold text-sm text-center hover:shadow-lg transition-all"
@@ -480,7 +410,7 @@ export default function TechEcosystemCanvas() {
                         color: selected.color,
                       }}
                     >
-                      {skill}
+                      {tool}
                     </div>
                   ))}
                 </div>
@@ -490,22 +420,22 @@ export default function TechEcosystemCanvas() {
               {selected.connections.length > 0 && (
                 <div>
                   <h3 className="text-sm font-bold text-slate-500 mb-3 uppercase tracking-wider">
-                    Connected Systems
+                    Connected Phases
                   </h3>
                   <div className="space-y-2">
                     {selected.connections.map((connId) => {
-                      const connBlock = techBlocks.find((b) => b.id === connId)
+                      const connPhase = phases.find((p) => p.id === connId)
                       return (
                         <button
                           key={connId}
-                          onClick={() => setSelectedBlock(connId)}
+                          onClick={() => setSelectedPhase(connId)}
                           className="w-full border-2 border-slate-900 p-3 font-bold text-sm text-left hover:shadow-lg transition-all flex items-center justify-between"
                           style={{
-                            backgroundColor: `${connBlock?.color}15`,
-                            color: connBlock?.color,
+                            backgroundColor: `${connPhase?.color}15`,
+                            color: connPhase?.color,
                           }}
                         >
-                          <span>{connBlock?.title}</span>
+                          <span>{connPhase?.title}</span>
                           <span className="text-xs">→</span>
                         </button>
                       )
@@ -516,39 +446,15 @@ export default function TechEcosystemCanvas() {
             </div>
           </div>
         )}
-
-        {/* Legend */}
-        <div className="bg-white border-4 border-slate-900 p-8">
-          <h3 className="text-2xl font-bold text-slate-900 mb-6">Interactive Guide</h3>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="flex items-start gap-3">
-              <div className="w-8 h-8 bg-indigo-600 border-2 border-slate-900 flex-shrink-0"></div>
-              <div>
-                <h4 className="font-bold text-slate-900 mb-1">Hover Blocks</h4>
-                <p className="text-sm text-slate-600">Quick skill preview</p>
-              </div>
-            </div>
-            <div className="flex items-start gap-3">
-              <div className="w-8 h-8 bg-white border-2 border-slate-900 flex items-center justify-center flex-shrink-0">
-                <div className="w-3 h-3 bg-indigo-600"></div>
-              </div>
-              <div>
-                <h4 className="font-bold text-slate-900 mb-1">Click Blocks</h4>
-                <p className="text-sm text-slate-600">Full details panel</p>
-              </div>
-            </div>
-            <div className="flex items-start gap-3">
-              <div className="w-8 h-8 bg-white border-2 border-slate-900 flex items-center justify-center flex-shrink-0">
-                <div className="w-2 h-2 bg-indigo-600 rounded-full animate-pulse"></div>
-              </div>
-              <div>
-                <h4 className="font-bold text-slate-900 mb-1">Animated Flow</h4>
-                <p className="text-sm text-slate-600">Tech connections</p>
-              </div>
-            </div>
-          </div>
-        </div>
       </div>
     </section>
   )
+}
+
+interface Particle {
+  id: string
+  fromId: string
+  toId: string
+  progress: number
+  speed: number
 }
