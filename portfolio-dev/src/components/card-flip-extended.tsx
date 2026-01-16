@@ -85,7 +85,10 @@ export default function CardFlipExtended({ variant = "tech", theme = "blue", ani
     },
   }
 
-  const content = manifestoContent[variant]
+  // Fix type error: ensure variant is a key of manifestoContent
+  type ManifestoVariant = keyof typeof manifestoContent;
+  const content = 
+    (manifestoContent as Record<string, typeof manifestoContent[keyof typeof manifestoContent]>)[variant as ManifestoVariant];
 
   useEffect(() => {
     if (!animated || !sectionRef.current) return
