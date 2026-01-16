@@ -88,9 +88,11 @@ export default function Home() {
 
           <MobileMenu
             isOpen={isMobileMenuOpen}
-            onNavClick={handleMobileNavClick}
+            onClose={() => setIsMobileMenuOpen(false)}
             onDownloadCV={handleDownloadCV}
           />
+
+
 
           {/* HeroSection now includes TechSkillsGrid internally */}
           <HeroSection />

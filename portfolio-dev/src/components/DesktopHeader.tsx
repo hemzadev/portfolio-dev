@@ -16,10 +16,10 @@ interface DesktopHeaderProps {
 }
 
 const NAV_ITEMS = [
-  { id: "about", label: "About" },
-  { id: "projects", label: "Projects" },
-  { id: "skills", label: "Skills" },
-  { id: "contact", label: "Contact" },
+  { id: "about", label: "About", disabled: false },
+  { id: "projects", label: "Projects", disabled: true },
+  { id: "skills", label: "Skills", disabled: false },
+  { id: "contact", label: "Contact", disabled: false },
 ]
 
 export default function DesktopHeader({ isScrolled, animationData, onDownloadCV, onNavbarReady }: DesktopHeaderProps) {
@@ -35,8 +35,50 @@ export default function DesktopHeader({ isScrolled, animationData, onDownloadCV,
     })
   }, [])
 
-  const handleNavClick = (elementId: string) => (e: React.MouseEvent) => {
+  const handleNavClick = (elementId: string, disabled: boolean) => (e: React.MouseEvent) => {
     e.preventDefault()
+    
+    if (disabled) return
+
+    // Special handling for Contact button
+    if (elementId === "contact") {
+      const experienceSection = document.getElementById("experience")
+      
+      if (experienceSection) {
+        // Scroll to experience section
+        const headerOffset = 120
+        const elementPosition = experienceSection.getBoundingClientRect().top + window.pageYOffset
+        const offsetPosition = elementPosition - headerOffset
+
+        window.scrollTo({
+          top: offsetPosition,
+          behavior: "smooth",
+        })
+
+        // Wait for scroll, then trigger the opportunity card
+        setTimeout(() => {
+          const opportunityCard = document.querySelector('[data-opportunity-card]') as HTMLElement
+          if (opportunityCard) {
+            // Highlight effect
+            opportunityCard.classList.add('ring-4', 'ring-violet-500', 'ring-opacity-75')
+            
+            // Click to open if not already open
+            const isFormOpen = opportunityCard.querySelector('[data-recruiter-form]')
+            if (!isFormOpen) {
+              opportunityCard.click()
+            }
+
+            // Remove highlight after animation
+            setTimeout(() => {
+              opportunityCard.classList.remove('ring-4', 'ring-violet-500', 'ring-opacity-75')
+            }, 2000)
+          }
+        }, 800) // Wait for scroll to complete
+      }
+      return
+    }
+
+    // Regular navigation for other items
     const element = document.getElementById(elementId)
     if (element) {
       const headerOffset = 120
@@ -72,14 +114,23 @@ export default function DesktopHeader({ isScrolled, animationData, onDownloadCV,
         )}
       </div>
 
-      <div className="flex flex-1 flex-row items-center justify-center space-x-2 text-sm font-medium text-violet-200 dark:text-violet-100 transition duration-200 hover:text-violet-400 md:space-x-4">
+      <div className="flex flex-1 flex-row items-center justify-center space-x-2 text-sm font-medium text-violet-200 dark:text-violet-100 transition duration-200 md:space-x-4">
         {NAV_ITEMS.map((item) => (
           <a
             key={item.id}
-            className="relative px-4 py-2 text-violet-300 dark:text-violet-200 hover:text-violet-400 transition-colors cursor-pointer whitespace-nowrap"
-            onClick={handleNavClick(item.id)}
+            className={`relative px-4 py-2 transition-colors whitespace-nowrap ${
+              item.disabled
+                ? "text-violet-300/30 dark:text-violet-200/30 cursor-not-allowed"
+                : "text-violet-300 dark:text-violet-200 hover:text-violet-400 cursor-pointer"
+            }`}
+            onClick={handleNavClick(item.id, item.disabled)}
           >
             <span className="relative z-20">{item.label}</span>
+            {item.disabled && (
+              <span className="absolute -top-1 -right-1 text-[10px] bg-slate-700 text-slate-400 px-1.5 py-0.5 rounded-full">
+                Soon
+              </span>
+            )}
           </a>
         ))}
       </div>

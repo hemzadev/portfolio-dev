@@ -52,7 +52,6 @@ const getPositionCoords = (position: AnimationStart) => {
       case "right-left":
         return { cx: "20", cy: "20" };
       default:
-        // This ensures all cases are handled
         const exhaustiveCheck: never = position;
         return { cx: "20", cy: "20" };
     }
@@ -64,7 +63,6 @@ const getPositionCoords = (position: AnimationStart) => {
         return `data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40"><defs><filter id="blur"><feGaussianBlur stdDeviation="2"/></filter></defs><circle cx="20" cy="20" r="18" fill="white" filter="url(%23blur)"/></svg>`;
       }
       const positionCoords = getPositionCoords(start);
-      // Add null check here
       if (!positionCoords) return "";
       const { cx, cy } = positionCoords;
       return `data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40"><defs><filter id="blur"><feGaussianBlur stdDeviation="2"/></filter></defs><circle cx="${cx}" cy="${cy}" r="18" fill="white" filter="url(%23blur)"/></svg>`;
@@ -73,7 +71,6 @@ const getPositionCoords = (position: AnimationStart) => {
     if (start === "center" || variant === "rectangle") return "";
   
     const positionCoords = getPositionCoords(start);
-    // Add null check here
     if (!positionCoords) return "";
     const { cx, cy } = positionCoords;
   
@@ -544,10 +541,17 @@ export const useThemeToggle = ({
 } = {}) => {
   const { theme, setTheme, resolvedTheme } = useTheme();
   const [isDark, setIsDark] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    setIsDark(resolvedTheme === "dark");
-  }, [resolvedTheme]);
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (mounted) {
+      setIsDark(resolvedTheme === "dark");
+    }
+  }, [resolvedTheme, mounted]);
 
   const styleId = "theme-transition-styles";
 
@@ -566,15 +570,17 @@ export const useThemeToggle = ({
   }, []);
 
   const toggleTheme = useCallback(() => {
-    setIsDark(!isDark);
+    if (!mounted) return;
 
+    const newTheme = theme === "light" ? "dark" : "light";
     const animation = createAnimation(variant, start, blur, gifUrl);
     updateStyles(animation.css);
 
     if (typeof window === "undefined") return;
 
     const switchTheme = () => {
-      setTheme(theme === "light" ? "dark" : "light");
+      setTheme(newTheme);
+      setIsDark(newTheme === "dark");
     };
 
     if (!document.startViewTransition) {
@@ -583,9 +589,11 @@ export const useThemeToggle = ({
     }
 
     document.startViewTransition(switchTheme);
-  }, [theme, setTheme, variant, start, blur, gifUrl, updateStyles, isDark]);
+  }, [theme, setTheme, variant, start, blur, gifUrl, updateStyles, mounted]);
 
   const setCrazyLightTheme = useCallback(() => {
+    if (!mounted) return;
+
     setIsDark(false);
 
     const animation = createAnimation(variant, start, blur, gifUrl);
@@ -603,9 +611,11 @@ export const useThemeToggle = ({
     }
 
     document.startViewTransition(switchTheme);
-  }, [setTheme, variant, start, blur, gifUrl, updateStyles]);
+  }, [setTheme, variant, start, blur, gifUrl, updateStyles, mounted]);
 
   const setCrazyDarkTheme = useCallback(() => {
+    if (!mounted) return;
+
     setIsDark(true);
 
     const animation = createAnimation(variant, start, blur, gifUrl);
@@ -623,7 +633,7 @@ export const useThemeToggle = ({
     }
 
     document.startViewTransition(switchTheme);
-  }, [setTheme, variant, start, blur, gifUrl, updateStyles]);
+  }, [setTheme, variant, start, blur, gifUrl, updateStyles, mounted]);
 
   return {
     isDark,
@@ -631,6 +641,7 @@ export const useThemeToggle = ({
     toggleTheme,
     setCrazyLightTheme,
     setCrazyDarkTheme,
+    mounted,
   };
 };
 
@@ -648,12 +659,41 @@ export const ThemeToggleButton = ({
   blur?: boolean;
   gifUrl?: string;
 }) => {
-  const { isDark, toggleTheme } = useThemeToggle({
+  const { isDark, toggleTheme, mounted } = useThemeToggle({
     variant,
     start,
     blur,
     gifUrl,
   });
+
+  if (!mounted) {
+    return (
+      <button
+        type="button"
+        className={`size-10 cursor-pointer rounded-full bg-black p-0 transition-all duration-300 ${className}`}
+        aria-label="Toggle theme"
+        disabled
+      >
+        <span className="sr-only">Toggle theme</span>
+        <svg viewBox="0 0 240 240" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <g>
+            <path
+              d="M120 67.5C149.25 67.5 172.5 90.75 172.5 120C172.5 149.25 149.25 172.5 120 172.5"
+              fill="white"
+            />
+            <path
+              d="M120 67.5C90.75 67.5 67.5 90.75 67.5 120C67.5 149.25 90.75 172.5 120 172.5"
+              fill="black"
+            />
+          </g>
+          <path
+            d="M120 3.75C55.5 3.75 3.75 55.5 3.75 120C3.75 184.5 55.5 236.25 120 236.25C184.5 236.25 236.25 184.5 236.25 120C236.25 55.5 184.5 3.75 120 3.75ZM120 214.5V172.5C90.75 172.5 67.5 149.25 67.5 120C67.5 90.75 90.75 67.5 120 67.5V25.5C172.5 25.5 214.5 67.5 214.5 120C214.5 172.5 172.5 214.5 120 214.5Z"
+            fill="white"
+          />
+        </svg>
+      </button>
+    );
+  }
 
   return (
     <button

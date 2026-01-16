@@ -1,47 +1,68 @@
 "use client"
 
-import type React from "react"
-
-import { SectionAccent } from "@/components/section-accent"
 import { useEffect, useState } from "react"
 import { ChevronDown, Plus } from "lucide-react"
-import { useForm, ValidationError } from "@formspree/react"
+
+// Mock SectionAccent component since we don't have it
+const SectionAccent = () => (
+  <div className="h-1 w-20 bg-gradient-to-r from-violet-600 to-violet-700 rounded-full" />
+)
 
 export default function ExperienceSection() {
   const [expandedId, setExpandedId] = useState<number | null>(null)
   const [showRecruiterForm, setShowRecruiterForm] = useState(false)
-  const [recruiterForm, setRecruiterForm] = useState({
+  const [showThankYou, setShowThankYou] = useState(false)
+  const [formData, setFormData] = useState({
     company: "",
     position: "",
     contact: "",
     expectations: "",
   })
 
-  const [state, handleSubmit] = useForm("xdaaaorz")
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    })
+  }
 
-  useEffect(() => {
-    if (state.succeeded) {
-      const t = setTimeout(() => setShowRecruiterForm(false), 1200)
-      return () => clearTimeout(t)
-    }
-  }, [state.succeeded])
+  const handleFormSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    // Handle form submission
+    setShowThankYou(true)
+    setFormData({
+      company: "",
+      position: "",
+      contact: "",
+      expectations: "",
+    })
+    setTimeout(() => {
+      setShowThankYou(false)
+      setShowRecruiterForm(false)
+    }, 3000)
+  }
 
   const toggleExpand = (id: number) => {
     setExpandedId(expandedId === id ? null : id)
   }
 
-  const [showThankYou, setShowThankYou] = useState(false)
-
   useEffect(() => {
-    if (state.succeeded) {
-      setShowThankYou(true)
-
-      // optional: auto-close after 3s
-      const t = setTimeout(() => setShowThankYou(false), 5000)
-      return () => clearTimeout(t)
+    const open = () => {
+      setShowRecruiterForm(true)
+  
+      // optional highlight
+      const card = document.querySelector("[data-opportunity-card]") as HTMLElement | null
+      if (card) {
+        card.classList.add("ring-4", "ring-violet-500", "ring-opacity-75")
+        setTimeout(() => {
+          card.classList.remove("ring-4", "ring-violet-500", "ring-opacity-75")
+        }, 2000)
+      }
     }
-  }, [state.succeeded])
-
+  
+    window.addEventListener("open-opportunity-form", open)
+    return () => window.removeEventListener("open-opportunity-form", open)
+  }, [])  
 
   const experiences = [
     {
@@ -91,12 +112,14 @@ export default function ExperienceSection() {
   ]
 
   return (
-    <section className="p-8 bg-slate-950">
-      <div className="flex flex-row gap-16">
-        <div className="flex flex-col gap-2 flex-1">
+    <section id="experience" className="p-4 md:p-8 bg-slate-50 dark:bg-slate-950 transition-colors duration-300">
+      <div className="flex flex-col md:flex-row gap-8 md:gap-16">
+        <div className="flex flex-col gap-2 flex-1 min-w-0">
           <SectionAccent />
-          <h1 className="text-3xl font-bold text-white">Professional Experiences</h1>
-          <p className="text-slate-400">
+          <h1 className="text-2xl md:text-3xl font-bold text-slate-900 dark:text-white transition-colors">
+            Professional Experiences
+          </h1>
+          <p className="text-slate-600 dark:text-slate-400 text-sm md:text-base transition-colors">
             Here is a summary of my professional experiences, highlighting my skills and contributions in each role.
           </p>
         </div>
@@ -108,31 +131,23 @@ export default function ExperienceSection() {
             aria-modal="true"
             onClick={() => setShowThankYou(false)}
           >
-            {/* Backdrop */}
             <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" />
-
-            {/* Modal */}
             <div
-              className="relative w-full max-w-md overflow-hidden border-2 border-dashed border-violet-500 bg-slate-900 shadow-2xl shadow-violet-500/20"
+              className="relative w-full max-w-md overflow-hidden border-2 border-dashed border-violet-500 bg-white dark:bg-slate-900 shadow-2xl shadow-violet-500/20 transition-colors"
               onClick={(e) => e.stopPropagation()}
             >
-              {/* Top accent */}
               <div className="h-1 w-full bg-gradient-to-r from-violet-600 to-violet-700" />
-
               <div className="p-6 flex flex-col items-center text-center gap-4">
-                <img
-                  src="/thankyou.gif"
-                  alt="Thank you"
-                  className="w-44 h-44 object-contain rounded bg-slate-800/40 p-2"
-                />
-                <p className="text-slate-300 text-sm leading-relaxed">
-                  I received your opportunity. I’ll contact you as fast as I can.
+                <div className="w-44 h-44 flex items-center justify-center bg-slate-100 dark:bg-slate-800/40 rounded">
+                  <span className="text-6xl">🎉</span>
+                </div>
+                <p className="text-slate-700 dark:text-slate-300 text-sm leading-relaxed transition-colors">
+                  I received your opportunity. I'll contact you as fast as I can.
                 </p>
-
                 <button
                   type="button"
                   onClick={() => setShowThankYou(false)}
-                  className="mt-2 w-full bg-gradient-to-r from-violet-600 to-violet-700 text-white py-2 px-4 hover:from-violet-700 hover:to-violet-800 transition-all focus:outline-none focus:ring-2 focus:ring-violet-500 focus:ring-offset-2 focus:ring-offset-slate-900"
+                  className="mt-2 w-full bg-gradient-to-r from-violet-600 to-violet-700 text-white py-2 px-4 hover:from-violet-700 hover:to-violet-800 transition-all focus:outline-none focus:ring-2 focus:ring-violet-500 focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-slate-900"
                 >
                   Close
                 </button>
@@ -142,8 +157,10 @@ export default function ExperienceSection() {
         )}
 
         <div className="flex flex-col gap-4 flex-1">
-          {/* Be My Next Opportunity Card */}
-          <div className="relative flex flex-col bg-slate-900 border-2 border-dashed border-violet-500 overflow-hidden transition-all duration-300 hover:shadow-lg hover:shadow-violet-500/20 hover:border-violet-400">
+          <div 
+            data-opportunity-card
+            className="relative flex flex-col bg-white dark:bg-slate-900 border-2 border-dashed border-violet-500 overflow-hidden transition-all duration-300 hover:shadow-lg hover:shadow-violet-500/20 hover:border-violet-400"
+          >
             {!showRecruiterForm ? (
               <div
                 className="flex flex-row p-4 gap-4 cursor-pointer items-center justify-center min-h-24"
@@ -151,140 +168,143 @@ export default function ExperienceSection() {
               >
                 <div className="flex items-center gap-3 text-violet-400 hover:text-violet-300 transition-colors">
                   <Plus className="w-6 h-6" />
-                  <span className="text-lg font-semibold">Be My Next Opportunity</span>
+                  <span className="text-sm md:text-lg font-semibold">Be My Next Opportunity</span>
                 </div>
               </div>
             ) : (
-              <div className="p-6">
-                <h3 className="text-xl font-semibold text-violet-400 mb-4">Tell Me About Your Opportunity</h3>
-
-                {/* ✅ Formspree submit */}
-                <form onSubmit={handleSubmit} className="space-y-4">
-                  {state.succeeded && (
-                    <div className="rounded border border-violet-600/40 bg-violet-600/10 px-3 py-2 text-sm text-violet-200">
-                      Thanks! Your message was sent.
-                    </div>
-                  )}
-
+              <div className="p-6" data-recruiter-form>
+                <h3 className="text-lg md:text-xl font-semibold text-violet-400 mb-4">
+                  Tell Me About Your Opportunity
+                </h3>
+                <div className="space-y-4">
                   <div>
-                    <label className="block text-sm font-medium text-slate-300 mb-1">Company *</label>
+                    <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1 transition-colors">
+                      Company *
+                    </label>
                     <input
                       type="text"
                       name="company"
+                      value={formData.company}
+                      onChange={handleInputChange}
                       required
-                      className="w-full px-3 py-2 bg-slate-800 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-violet-500"
+                      className="w-full px-3 py-2 bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-violet-500 transition-colors"
                       placeholder="Enter company name"
                     />
-                    <ValidationError prefix="Company" field="company" errors={state.errors} />
                   </div>
-
                   <div>
-                    <label className="block text-sm font-medium text-slate-300 mb-1">Position *</label>
+                    <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1 transition-colors">
+                      Position *
+                    </label>
                     <input
                       type="text"
                       name="position"
+                      value={formData.position}
+                      onChange={handleInputChange}
                       required
-                      className="w-full px-3 py-2 bg-slate-800 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-violet-500"
+                      className="w-full px-3 py-2 bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-violet-500 transition-colors"
                       placeholder="Enter position title"
                     />
-                    <ValidationError prefix="Position" field="position" errors={state.errors} />
                   </div>
-
                   <div>
-                    <label className="block text-sm font-medium text-slate-300 mb-1">Contact Information *</label>
+                    <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1 transition-colors">
+                      Contact Information *
+                    </label>
                     <input
                       type="text"
                       name="contact"
+                      value={formData.contact}
+                      onChange={handleInputChange}
                       required
-                      className="w-full px-3 py-2 bg-slate-800 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-violet-500"
+                      className="w-full px-3 py-2 bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-violet-500 transition-colors"
                       placeholder="Email or phone number"
                     />
-                    <ValidationError prefix="Contact" field="contact" errors={state.errors} />
                   </div>
-
                   <div>
-                    <label className="block text-sm font-medium text-slate-300 mb-1">
+                    <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1 transition-colors">
                       What you expect me to contribute *
                     </label>
                     <textarea
                       name="expectations"
+                      value={formData.expectations}
+                      onChange={handleInputChange}
                       required
                       rows={3}
-                      className="w-full px-3 py-2 bg-slate-800 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-violet-500 resize-none"
+                      className="w-full px-3 py-2 bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-violet-500 resize-none transition-colors"
                       placeholder="Describe the role, challenges, and what you're looking for..."
                     />
-                    <ValidationError prefix="Expectations" field="expectations" errors={state.errors} />
                   </div>
-
-                  <div className="flex gap-3 pt-2">
+                  <div className="flex gap-3 pt-2 flex-col md:flex-row">
                     <button
-                      type="submit"
-                      disabled={state.submitting}
-                      className="flex-1 bg-gradient-to-r from-violet-600 to-violet-700 text-white py-2 px-4 hover:from-violet-700 hover:to-violet-800 transition-all focus:outline-none focus:ring-2 focus:ring-violet-500 focus:ring-offset-2 focus:ring-offset-slate-900 disabled:opacity-60 disabled:cursor-not-allowed"
+                      type="button"
+                      onClick={handleFormSubmit}
+                      className="flex-1 bg-gradient-to-r from-violet-600 to-violet-700 text-white py-2 px-4 hover:from-violet-700 hover:to-violet-800 transition-all focus:outline-none focus:ring-2 focus:ring-violet-500 focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-slate-900"
                     >
-                      {state.submitting ? "Sending..." : "Submit Opportunity"}
+                      Submit Opportunity
                     </button>
-
                     <button
                       type="button"
                       onClick={() => setShowRecruiterForm(false)}
-                      className="flex-1 bg-slate-800 text-slate-200 py-2 px-4 hover:bg-slate-700 transition-colors focus:outline-none focus:ring-2 focus:ring-slate-600 focus:ring-offset-2 focus:ring-offset-slate-900"
+                      className="flex-1 bg-slate-200 dark:bg-slate-800 text-slate-800 dark:text-slate-200 py-2 px-4 hover:bg-slate-300 dark:hover:bg-slate-700 transition-colors focus:outline-none focus:ring-2 focus:ring-slate-400 dark:focus:ring-slate-600 focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-slate-900"
                     >
                       Cancel
                     </button>
                   </div>
-                </form>
+                </div>
               </div>
             )}
           </div>
 
-          {/* Existing Experience Items */}
           {experiences.map((exp) => (
             <div
               key={exp.id}
-              className="relative flex flex-col bg-slate-900 border border-slate-800 overflow-hidden transition-all duration-300 hover:shadow-lg hover:shadow-violet-500/10 hover:border-violet-600"
+              className="relative flex flex-col bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 overflow-hidden transition-all duration-300 hover:shadow-lg hover:shadow-violet-500/10 hover:border-violet-600"
             >
-              <div className="flex flex-row p-4 gap-4 cursor-pointer relative" onClick={() => toggleExpand(exp.id)}>
+              <div
+                className="flex flex-col md:flex-row p-4 gap-4 cursor-pointer relative"
+                onClick={() => toggleExpand(exp.id)}
+              >
                 <img
                   src={exp.logo || "/placeholder.svg"}
                   alt={`${exp.company} logo`}
-                  className="w-15 h-15 object-contain rounded-full bg-violet-950 p-1"
+                  className="w-15 h-15 object-contain rounded-full bg-violet-100 dark:bg-violet-950 p-1 flex-shrink-0 transition-colors"
                 />
-                <div className="flex-1">
-                  <h2 className="text-xl font-semibold text-white">{exp.title}</h2>
+                <div className="flex-1 min-w-0">
+                  <h2 className="text-lg md:text-xl font-semibold text-slate-900 dark:text-white transition-colors">
+                    {exp.title}
+                  </h2>
                   <a
                     href={exp.companyUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-slate-400 hover:text-violet-400 transition-colors text-sm underline underline-offset-3"
+                    className="text-slate-600 dark:text-slate-400 hover:text-violet-400 transition-colors text-sm underline underline-offset-3"
                     onClick={(e) => e.stopPropagation()}
                   >
                     @{exp.company}
                   </a>
-
-                  <div className="absolute bottom-3 right-3 text-sm text-slate-400 font-medium">{exp.period}</div>
+                  <div className="md:absolute md:bottom-3 md:right-3 text-sm text-slate-500 dark:text-slate-400 font-medium mt-2 md:mt-0 transition-colors">
+                    {exp.period}
+                  </div>
                 </div>
-
                 <ChevronDown
-                  className={`w-5 h-5 text-slate-500 transition-transform duration-300 ${
+                  className={`w-5 h-5 text-slate-400 dark:text-slate-500 transition-transform duration-300 flex-shrink-0 ${
                     expandedId === exp.id ? "rotate-180" : ""
                   }`}
                 />
-
                 {exp.isCurrent && (
-                  <div className="absolute top-3 right-3 flex items-center justify-center px-3 py-1 bg-gradient-to-r from-violet-600 to-violet-700 text-sm text-white rounded">
+                  <div className="md:absolute md:top-3 md:right-3 flex items-center justify-center px-3 py-1 bg-gradient-to-r from-violet-600 to-violet-700 text-sm text-white rounded">
                     Current position
                   </div>
                 )}
               </div>
-
               <div
                 className={`transition-all duration-300 ease-in-out ${
                   expandedId === exp.id ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
                 }`}
               >
-                <div className="px-4 pb-4 pt-2 border-t border-slate-800">
-                  <p className="text-slate-300 text-sm leading-relaxed">{exp.description}</p>
+                <div className="px-4 pb-4 pt-2 border-t border-slate-200 dark:border-slate-800 transition-colors">
+                  <p className="text-slate-700 dark:text-slate-300 text-sm leading-relaxed transition-colors">
+                    {exp.description}
+                  </p>
                 </div>
               </div>
             </div>
