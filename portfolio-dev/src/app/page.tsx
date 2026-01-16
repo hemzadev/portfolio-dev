@@ -7,6 +7,7 @@ import MobileMenu from '@/components/MobileMenu'
 import ManifestoSection from '@/components/manifesto-section'
 import ExperienceSection from '@/components/experience-section'
 import TechEnvironmentSection from '@/components/tech-env-section'
+import SorrySection from '@/components/sorry-section'
 
 export default function Home() {
   const [isScrolled, setIsScrolled] = useState(false)
@@ -50,8 +51,8 @@ export default function Home() {
 
   const handleDownloadCV = () => {
     const link = document.createElement("a")
-    link.href = "/cv.pdf"
-    link.download = "CV.pdf"
+    link.href = "files/cv.pdf"
+    link.download = "Hamza_Ben_Azza_CV.pdf"
     document.body.appendChild(link)
     link.click()
     document.body.removeChild(link)
@@ -94,7 +95,8 @@ export default function Home() {
           {/* HeroSection now includes TechSkillsGrid internally */}
           <HeroSection />
           <ExperienceSection/>
-          <TechEnvironmentSection/>
+          <SorrySection/>
+          {/* <TechEnvironmentSection/> */}
         </div>
       </div>
     </div>
