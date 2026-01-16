@@ -1,9 +1,12 @@
-import { useRef } from 'react'
-import { useGSAP } from '@gsap/react'
-import gsap from 'gsap'
+"use client"
+
+import type React from "react"
+
+import { useRef } from "react"
+import { useGSAP } from "@gsap/react"
+import gsap from "gsap"
 import Lottie from "lottie-react"
-import { ThemeToggleButton } from './themeToggle'
-import { Skiper4 } from './skiper4'
+import { ThemeToggleButton } from "./themeToggle"
 
 interface DesktopHeaderProps {
   isScrolled: boolean
@@ -13,10 +16,10 @@ interface DesktopHeaderProps {
 }
 
 const NAV_ITEMS = [
-  { id: 'about', label: 'About' },
-  { id: 'projects', label: 'Projects' },
-  { id: 'skills', label: 'Skills' },
-  { id: 'contact', label: 'Contact' },
+  { id: "about", label: "About" },
+  { id: "projects", label: "Projects" },
+  { id: "skills", label: "Skills" },
+  { id: "contact", label: "Contact" },
 ]
 
 export default function DesktopHeader({ isScrolled, animationData, onDownloadCV, onNavbarReady }: DesktopHeaderProps) {
@@ -28,7 +31,7 @@ export default function DesktopHeader({ isScrolled, animationData, onDownloadCV,
       y: 0,
       opacity: 1,
       duration: 1,
-      onComplete: onNavbarReady
+      onComplete: onNavbarReady,
     })
   }, [])
 
@@ -50,7 +53,7 @@ export default function DesktopHeader({ isScrolled, animationData, onDownloadCV,
   return (
     <header
       ref={navbarRef}
-      className={`sticky top-4 z-[9999] mx-auto hidden w-full flex-row items-center justify-between self-start rounded-full bg-indigo-700/40 dark:bg-indigo-900/40 md:flex backdrop-blur-sm border border-border/50 shadow-lg transition-all duration-300 ${
+      className={`sticky top-4 z-[9999] mx-auto hidden w-full flex-row items-center justify-between self-start rounded-full bg-slate-950/80 dark:bg-slate-950/85 md:flex backdrop-blur-md border border-violet-500/20 shadow-lg transition-all duration-300 ${
         isScrolled ? "max-w-3xl px-6" : "max-w-5xl px-8"
       } py-2`}
       style={{
@@ -69,12 +72,11 @@ export default function DesktopHeader({ isScrolled, animationData, onDownloadCV,
         )}
       </div>
 
-      {/* Navigation Items */}
-      <div className="flex flex-1 flex-row items-center justify-center space-x-2 text-sm font-medium text-zinc-100 dark:text-zinc-200 transition duration-200 hover:text-foreground md:space-x-4">
+      <div className="flex flex-1 flex-row items-center justify-center space-x-2 text-sm font-medium text-violet-200 dark:text-violet-100 transition duration-200 hover:text-violet-400 md:space-x-4">
         {NAV_ITEMS.map((item) => (
           <a
             key={item.id}
-            className="relative px-4 py-2 text-zinc-50 dark:text-zinc-100 hover:text-foreground transition-colors cursor-pointer whitespace-nowrap"
+            className="relative px-4 py-2 text-violet-300 dark:text-violet-200 hover:text-violet-400 transition-colors cursor-pointer whitespace-nowrap"
             onClick={handleNavClick(item.id)}
           >
             <span className="relative z-20">{item.label}</span>
@@ -84,17 +86,16 @@ export default function DesktopHeader({ isScrolled, animationData, onDownloadCV,
 
       {/* Actions Section */}
       <div className="flex items-center gap-3">
-  
-        <ThemeToggleButton 
+        <ThemeToggleButton
           variant="circle"
           start="center"
           blur={false}
           className="size-9 hover:scale-105 transition-transform duration-200 z-50 relative"
         />
-        
+
         <button
           onClick={onDownloadCV}
-          className="rounded-md font-bold relative cursor-pointer hover:-translate-y-0.5 transition duration-200 inline-block text-center bg-gradient-to-b from-indigo-500 to-indigo-600 dark:from-indigo-600 dark:to-indigo-700 text-white shadow-[0px_2px_0px_0px_rgba(255,255,255,0.2)_inset] px-4 py-2 text-sm z-50"
+          className="rounded-md font-bold relative cursor-pointer hover:-translate-y-0.5 transition duration-200 inline-block text-center bg-gradient-to-b from-violet-600 to-violet-700 dark:from-violet-600 dark:to-violet-800 text-white shadow-[0px_2px_0px_0px_rgba(168,85,247,0.3)_inset] px-4 py-2 text-sm z-50 hover:shadow-[0_0_20px_rgba(168,85,247,0.5)]"
         >
           Download CV
         </button>

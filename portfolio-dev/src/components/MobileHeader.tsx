@@ -1,3 +1,5 @@
+"use client"
+
 import Lottie from "lottie-react"
 
 interface MobileHeaderProps {
@@ -8,7 +10,7 @@ interface MobileHeaderProps {
 
 export default function MobileHeader({ animationData, isMobileMenuOpen, onToggleMenu }: MobileHeaderProps) {
   return (
-    <header className="sticky top-4 z-[9999] mx-4 flex w-auto flex-row items-center justify-between rounded-full bg-background/80 backdrop-blur-sm border border-border/50 shadow-lg md:hidden px-4 py-3">
+    <header className="sticky top-4 z-[9999] mx-4 flex w-auto flex-row items-center justify-between rounded-full bg-slate-950/80 backdrop-blur-md border border-violet-500/20 shadow-lg md:hidden px-4 py-3">
       <div className="flex items-center justify-center">
         {animationData && (
           <div className="w-10 h-10">
@@ -19,9 +21,9 @@ export default function MobileHeader({ animationData, isMobileMenuOpen, onToggle
 
       <button
         onClick={onToggleMenu}
-        className="flex items-center justify-center w-10 h-10 rounded-full border border-border/50 transition-colors hover:opacity-90"
+        className="flex items-center justify-center w-10 h-10 rounded-full border border-violet-500/30 transition-colors hover:opacity-90 shadow-lg"
         style={{
-          background: "linear-gradient(135deg, #6366f1, #8b5cf6)",
+          background: "linear-gradient(135deg, #a855f7, #9333ea)",
         }}
         aria-label="Toggle menu"
       >

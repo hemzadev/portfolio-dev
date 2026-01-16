@@ -50,56 +50,53 @@ export default function HeroSection() {
   }, [])
 
   return (
-<section className="min-h-screen flex flex-col">
+    <section className="min-h-screen flex flex-col">
+      {/* Main Hero Content */}
+      <div className="flex-1 flex items-center justify-center px-4 sm:px-6 lg:px-8 xl:px-12 py-4 sm:py-8">
+        <div className="w-full max-w-7xl mx-auto flex flex-col-reverse lg:flex-row items-center lg:items-end justify-between gap-8 lg:gap-12">
+          <div className="flex-1 text-center lg:text-left space-y-4 lg:space-y-6">
+            <h1 className="hero-title text-3xl sm:text-4xl md:text-5xl lg:text-5xl xl:text-6xl font-bold text-slate-100 dark:text-white leading-tight">
+              Salam, my name is <span className="text-violet-400">Hamza</span> and I'm a{" "}
+              <span className="text-violet-400">Software Engineer</span>
+            </h1>
 
-{/* Main Hero Content */}
-<div className="flex-1 flex items-center justify-center px-4 sm:px-6 lg:px-8 xl:px-12 py-4 sm:py-8">
-  <div className="w-full max-w-7xl mx-auto flex flex-col-reverse lg:flex-row items-center lg:items-end justify-between gap-8 lg:gap-12">
+            <div className="hero-p text-base sm:text-lg md:text-xl lg:text-xl xl:text-xl text-slate-300 dark:text-slate-200 leading-relaxed max-w-2xl mx-auto lg:mx-0">
+              I'm a software engineer from{" "}
+              <span className="inline-flex items-center gap-1">
+                Morocco{" "}
+                <Lottie animationData={moroccoFlag} loop autoplay style={{ width: "1.5rem", height: "1.5rem" }} />
+              </span>
+              , and my goal is to contribute to innovative projects within leading{" "}
+              <span className="font-semibold text-violet-400">multinational companies</span> and{" "}
+              <span className="font-semibold text-violet-400">financial institutions</span>.
+            </div>
+          </div>
 
-    {/* Text Content */}
-    <div className="flex-1 text-center lg:text-left space-y-4 lg:space-y-6">
-      <h1 className="hero-title text-3xl sm:text-4xl md:text-5xl lg:text-5xl xl:text-6xl font-bold text-gray-900 leading-tight">
-        Salam, my name is <span className="text-indigo-600">Hamza</span> and I'm a <span className="text-indigo-600">Software Engineer</span>
-      </h1>
+          {/* Visual Content */}
+          <div className="hero-visual flex-1 flex justify-center lg:justify-end relative">
+            <div className="relative w-64 sm:w-72 md:w-80 lg:w-96">
+              <div className="h-14 lg:h-16 w-full bg-gradient-to-t from-violet-600 via-violet-500 to-transparent rounded-t-lg" />
 
-      <div className="hero-p text-base sm:text-lg md:text-xl lg:text-xl xl:text-xl text-gray-600 leading-relaxed max-w-2xl mx-auto lg:mx-0">
-        I'm a software engineer from{" "}
-        <span className="inline-flex items-center gap-1">
-          Morocco <Lottie animationData={moroccoFlag} loop autoplay style={{ width: '1.5rem', height: '1.5rem' }} />
-        </span>
-        , and my goal is to contribute to innovative projects within leading <span className="font-semibold text-indigo-600">multinational companies</span> and <span className="font-semibold text-indigo-600">financial institutions</span>.
-      </div>
-    </div>
+              <div className="relative w-full aspect-[3/4] rounded-b-full overflow-hidden bg-slate-900 shadow-lg shadow-violet-500/20">
+                <img
+                  src="image3.jpeg"
+                  alt="Hamza Ben Azza - Software Engineer"
+                  className="w-full h-full object-cover"
+                />
+              </div>
+            </div>
 
-    {/* Visual Content */}
-    <div className="hero-visual flex-1 flex justify-center lg:justify-end relative">
-      <div className="relative w-64 sm:w-72 md:w-80 lg:w-96">
-        {/* Gradient Header */}
-        <div className="h-14 lg:h-16 w-full bg-gradient-to-t from-indigo-400 via-violet-300 to-transparent rounded-t-lg" />
-
-        {/* Image Container */}
-        <div className="relative w-full aspect-[3/4] rounded-b-full overflow-hidden bg-gray-200 shadow-lg">
-          <img src="image3.jpeg" alt="Hamza Ben Azza - Software Engineer" className="w-full h-full object-cover" />
+            {/* CircularText */}
+            <div className="absolute -bottom-8 sm:-bottom-10 lg:-bottom-12 left-1/2 transform -translate-x-1/2 scale-75 sm:scale-90 lg:scale-100">
+              <CircularText text="HAMZA*BEN*AZZA*" onHover="speedUp" spinDuration={10} />
+            </div>
+          </div>
         </div>
       </div>
 
-      {/* CircularText */}
-      <div className="absolute -bottom-8 sm:-bottom-10 lg:-bottom-12 left-1/2 transform -translate-x-1/2 scale-75 sm:scale-90 lg:scale-100">
-        <CircularText text="HAMZA*BEN*AZZA*" onHover="speedUp" spinDuration={10} />
+      <div className="w-full border-t border-b border-violet-500/20 bg-slate-900/50 dark:bg-slate-900/60 py-8 lg:py-5">
+        <TechSkillsGrid />
       </div>
-    </div>
-
-  </div>
-</div>
-
-
-{/* Skills Section */}
-<div className="w-full border-t border-b border-gray-800 bg-indigo-100 dark:bg-indigo-100 py-8 lg:py-5">
-  <TechSkillsGrid />
-</div>
-
-
-</section>
-
+    </section>
   )
 }
